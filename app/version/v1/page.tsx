@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Calendar,
   CheckCircle,
@@ -23,7 +23,13 @@ interface DailyLog {
 
 export default function App() {
   // State สำหรับเก็บประวัติการบันทึก
-  const [logs, setLogs] = useState<DailyLog[]>([]);
+  const [logs, setLogs] = useState<DailyLog[]>(() => {
+    if (typeof window !== "undefined") {
+      const savedLogs = localStorage.getItem("intern_logs");
+      if (savedLogs) return JSON.parse(savedLogs);
+    }
+    return [];
+  });
 
   // State สำหรับฟอร์มปัจจุบัน
   const [formData, setFormData] = useState({
@@ -31,14 +37,6 @@ export default function App() {
     learned: "",
     nextSteps: "",
   });
-
-  // โหลดข้อมูลจาก LocalStorage เมื่อเปิดหน้าเว็บ (สำหรับทดลองใช้บนเครื่อง)
-  useEffect(() => {
-    const savedLogs = localStorage.getItem("intern_logs");
-    if (savedLogs) {
-      setLogs(JSON.parse(savedLogs));
-    }
-  }, []);
 
   // บันทึกข้อมูลลง State และ LocalStorage
   const handleSave = () => {
