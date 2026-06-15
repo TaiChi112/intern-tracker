@@ -1,15 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
-  Calendar,
   CheckCircle,
   BookOpen,
   ArrowRight,
   Save,
   Clock,
   Trash2,
-  History,
   User,
   ShieldCheck,
   MessageSquare,
@@ -33,7 +31,13 @@ interface DailyLog {
 type Role = "intern" | "supervisor";
 
 export default function App() {
-  const [logs, setLogs] = useState<DailyLog[]>([]);
+  const [logs, setLogs] = useState<DailyLog[]>(() => {
+    if (typeof window !== "undefined") {
+      const savedLogs = localStorage.getItem("intern_logs");
+      if (savedLogs) return JSON.parse(savedLogs);
+    }
+    return [];
+  });
   const [role, setRole] = useState<Role>("intern"); // จำลองระบบ Login
   const [formData, setFormData] = useState({
     done: "",
@@ -41,12 +45,6 @@ export default function App() {
     nextSteps: "",
   });
   const [reviewData, setReviewData] = useState<{ [key: string]: string }>({}); // เก็บข้อความรีวิวของพี่เลี้ยง
-
-  // โหลดข้อมูล
-  useEffect(() => {
-    const savedLogs = localStorage.getItem("intern_logs");
-    if (savedLogs) setLogs(JSON.parse(savedLogs));
-  }, []);
 
   // ฟังก์ชันของฝั่ง Intern
   const handleSaveLog = () => {
