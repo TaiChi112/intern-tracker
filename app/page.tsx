@@ -22,7 +22,6 @@ import {
 
 import { Prisma } from "@prisma/client";
 
-// วิธีนี้จะช่วยให้ได้โครงสร้างข้อมูลที่ถูกต้องแม่นยำที่สุด
 type PrismaUser = Prisma.UserGetPayload<{}>;
 
 type LogWithUser = {
